@@ -5,6 +5,11 @@ const loader = document.getElementById("loader");
 const copyQuoteButton = document.getElementById("copy-quote-btn");
 const favoriteQuoteButton = document.getElementById("favorite-quote-btn");
 
+const viewFavoritesButton = document.getElementById("view-favorites-btn");
+const closeFavoritesButton = document.getElementById("close-favorites-btn");
+const favoritesSection = document.getElementById("favorites-section");
+const favoritesListElement = document.getElementById("favorites-list");
+
 const apiUrl = "https://api.realinspire.live/v1/quotes/random";
 
 // Store the current quote and author globally or make them accessible
@@ -25,8 +30,8 @@ function showLoading() {
     copyQuoteButton.style.opacity = "0.7";
   }
   if (favoriteQuoteButton) {
-      favoriteQuoteButton.disabled = true;
-      favoriteQuoteButton.style.opacity = "0.7";
+    favoriteQuoteButton.disabled = true;
+    favoriteQuoteButton.style.opacity = "0.7";
   }
 }
 
@@ -43,8 +48,8 @@ function hideLoading() {
     copyQuoteButton.style.opacity = "1";
   }
   if (favoriteQuoteButton) {
-      favoriteQuoteButton.disabled = false;
-      favoriteQuoteButton.style.opacity = "1";
+    favoriteQuoteButton.disabled = false;
+    favoriteQuoteButton.style.opacity = "1";
   }
 }
 
@@ -171,8 +176,72 @@ function toggleFavorite() {
   }
   saveFavorites();
   updateFavoriteButtonStatus();
+
+  // If favorites section is visible, refresh it
+  if (!favoritesSection.classList.contains("hidden")) {
+    displayFavoriteQuotes();
+  }
 }
 
+// Function to display favorite quotes in the dedicated section
+function displayFavoriteQuotes() {
+  favoritesListElement.innerHTML = ""; // Clear existing list
+
+  if (favorites.length === 0) {
+    favoritesListElement.innerHTML =
+      "<li>No favorite quotes yet. Start adding some!</li>";
+    return;
+  }
+
+  favorites.forEach((quote, index) => {
+    const listItem = document.createElement("li");
+    listItem.innerHTML = `
+      <p class="fav-quote-text">"${quote.content}"</p>
+      <p class="fav-quote-author">- ${quote.author || "Unknown"}</p>
+      <button class="remove-fav-btn" data-index="${index}">Remove from Favorites</button>
+    `;
+    favoritesListElement.appendChild(listItem);
+  });
+
+  // Add event listeners to the new "Remove from Favorites" buttons
+  document
+    .querySelectorAll("#favorites-list .remove-fav-btn")
+    .forEach((button) => {
+      button.addEventListener("click", function () {
+        const quoteIndexToRemove = parseInt(this.dataset.index, 10);
+        removeQuoteFromFavoritesList(quoteIndexToRemove);
+      });
+    });
+}
+
+// Function to remove a quote directly from the favorites list
+function removeQuoteFromFavoritesList(index) {
+  if (index >= 0 && index < favorites.length) {
+    const removedQuote = favorites[index];
+    favorites.splice(index, 1);
+    saveFavorites(); // Save the updated favorites array to localStorage
+    displayFavoriteQuotes(); // Refresh the displayed list of favorites
+
+    // Also, update the main favorite button if the currently displayed quote was the one removed
+    if (
+      currentQuoteContent === removedQuote.content &&
+      currentQuoteAuthor === removedQuote.author
+    ) {
+      updateFavoriteButtonStatus();
+    }
+  }
+}
+
+// Function to toggle the visibility of the favorites section
+function toggleFavoritesSection() {
+  favoritesSection.classList.toggle("hidden");
+  if (!favoritesSection.classList.contains("hidden")) {
+    displayFavoriteQuotes(); // Refresh the list when showing
+    viewFavoritesButton.textContent = "Hide Favorites";
+  } else {
+    viewFavoritesButton.textContent = "View Favorites";
+  }
+}
 
 // Event listener for the button
 newQuoteButton.addEventListener("click", getQuote);
@@ -183,8 +252,13 @@ copyQuoteButton.addEventListener("click", copyQuote);
 // Event listener for the favorite button
 favoriteQuoteButton.addEventListener("click", toggleFavorite);
 
+// Event listeners for the View Favorite buttons
+viewFavoritesButton.addEventListener("click", toggleFavoritesSection);
+closeFavoritesButton.addEventListener("click", () => {
+  favoritesSection.classList.add("hidden");
+  viewFavoritesButton.textContent = "View Favorites";
+});
 
-// Load a quote when the page first loads
-getQuote();
-// Load favorites when the script starts
-loadFavorites();
+// Initial setup
+loadFavorites(); // Load favorites when the script starts
+getQuote();      // Load the first quote

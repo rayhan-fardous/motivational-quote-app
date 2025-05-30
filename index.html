@@ -12,12 +12,22 @@
       <p id="quote-text">Loading your daily inspiration...</p>
       <p id="quote-author"></p>
       <div class="loader" id="loader"></div>
+      <div class="main-controls">
+        <button id="view-favorites-btn">View Favorites</button>
+      </div>
       <div class="buttons-container">
-        <button id="new-quote-btn">Get New Quote</button>
+        <button id="new-quote-btn">New Quote</button>
         <button id="copy-quote-btn">Copy Quote</button>
         <button id="favorite-quote-btn">♡ Favorite</button>
       </div>
     </div>
+
+    <div id="favorites-section" class="hidden">
+      <h2>My Favorite Quotes</h2>
+      <ul id="favorites-list"></ul>
+      <button id="close-favorites-btn">Close Favorites</button>
+    </div>
+
     <!-- Script -->
     <script src="app.js"></script>
   </body>

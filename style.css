@@ -24,6 +24,7 @@ body {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   text-align: center;
   max-width: 600px;
+  margin: auto;
 }
 #quote-text {
   font-size: 1.5em;
@@ -40,7 +41,7 @@ body {
 /* Styles for a container to hold multiple buttons */
 .buttons-container {
   display: flex;
-  justify-content: center; 
+  justify-content: center;
   gap: 10px; /* Space between buttons */
   margin-top: 20px;
 }
@@ -66,6 +67,89 @@ body {
 #favorite-quote-btn.favorited {
   background-color: #dc3545; /* Red when favorited */
   color: white;
+}
+
+.main-controls {
+  margin-bottom: 20px; /* Add some space above the quote buttons */
+  text-align: center;
+}
+
+#view-favorites-btn,
+#close-favorites-btn {
+  background-color: #28a745; /* Green color */
+  color: white;
+  padding: 10px 20px;
+  margin-bottom: 15px; /* For close button */
+}
+
+#view-favorites-btn:hover,
+#close-favorites-btn:hover {
+  background-color: #218838;
+}
+
+#favorites-section {
+  background-color: #f9f9f9;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  padding: 20px;
+  margin-top: 30px;
+  max-width: 700px; /* Or your preferred max-width */
+  width: 90%;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  text-align: left; /* Align text to the left for list items */
+}
+
+#favorites-section.hidden {
+  display: none;
+}
+
+#favorites-section h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+#favorites-list {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 20px; /* Space before the close button */
+}
+
+#favorites-list li {
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 15px;
+  margin-bottom: 10px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+#favorites-list .fav-quote-text {
+  font-size: 1.1em;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+#favorites-list .fav-quote-author {
+  font-size: 0.9em;
+  font-style: italic;
+  color: #555;
+  margin-bottom: 10px;
+}
+
+#favorites-list .remove-fav-btn {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  font-size: 0.8em;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#favorites-list .remove-fav-btn:hover {
+  background-color: #c82333;
 }
 
 button {
