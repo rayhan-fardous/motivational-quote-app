@@ -54,6 +54,20 @@ body {
   background-color: #138496;
 }
 
+#favorite-quote-btn {
+  background-color: #ffc107; /* A yellow color for favoriting */
+  color: #333;
+}
+
+#favorite-quote-btn:hover {
+  background-color: #e0a800;
+}
+
+#favorite-quote-btn.favorited {
+  background-color: #dc3545; /* Red when favorited */
+  color: white;
+}
+
 button {
   background-color: #007bff;
   color: white;
