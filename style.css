@@ -56,7 +56,7 @@ body {
 }
 
 #favorite-quote-btn {
-  background-color: #ffc107; /* A yellow color for favoriting */
+  background-color: #ffc107;
   color: #333;
 }
 
@@ -65,7 +65,7 @@ body {
 }
 
 #favorite-quote-btn.favorited {
-  background-color: #dc3545; /* Red when favorited */
+  background-color: #dc3545;
   color: white;
 }
 

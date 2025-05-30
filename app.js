@@ -261,4 +261,4 @@ closeFavoritesButton.addEventListener("click", () => {
 
 // Initial setup
 loadFavorites(); // Load favorites when the script starts
-getQuote();      // Load the first quote
+getQuote(); // Load the first quote
