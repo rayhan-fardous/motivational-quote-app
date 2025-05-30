@@ -36,19 +36,39 @@ body {
   color: #555;
   margin-bottom: 25px;
 }
+
+/* Styles for a container to hold multiple buttons */
+.buttons-container {
+  display: flex;
+  justify-content: center; 
+  gap: 10px; /* Space between buttons */
+  margin-top: 20px;
+}
+
+/* Style for the new buttons */
+#copy-quote-btn {
+  background-color: #17a2b8; /* A different color */
+}
+
+#copy-quote-btn:hover {
+  background-color: #138496;
+}
+
 button {
   background-color: #007bff;
   color: white;
   border: none;
-  padding: 12px 25px;
-  font-size: 1em;
+  padding: 12px 20px; /* Adjusted padding for potentially smaller text */
+  font-size: 0.95em; /* Slightly smaller font if needed */
   border-radius: 5px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease, opacity 0.3s ease; /* Added opacity transition */
 }
+
 button:hover {
   background-color: #0056b3;
 }
+
 .loader {
   border: 4px solid #f3f3f3;
   border-radius: 50%;
