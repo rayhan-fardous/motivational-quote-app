@@ -4,6 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Motivational Quotes</title>
+    <link
+      rel="stylesheet"
+      href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css"
+    />
     <link rel="stylesheet" href="style.css" />
   </head>
 
@@ -18,7 +22,11 @@
       <div class="buttons-container">
         <button id="new-quote-btn">New Quote</button>
         <button id="copy-quote-btn">Copy Quote</button>
-        <button id="favorite-quote-btn">♡ Favorite</button>
+        <div id="favorite-quote-btn" class="click">
+          <span class="fa fa-heart-o"></span>
+          <div class="ring"></div>
+          <div class="ring2"></div>
+        </div>
       </div>
     </div>
 
@@ -27,7 +35,8 @@
       <ul id="favorites-list"></ul>
       <button id="close-favorites-btn">Close Favorites</button>
     </div>
-
+    <!-- JQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <!-- Script -->
     <script src="app.js"></script>
   </body>

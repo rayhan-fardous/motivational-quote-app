@@ -5,6 +5,10 @@ const loader = document.getElementById("loader");
 const copyQuoteButton = document.getElementById("copy-quote-btn");
 const favoriteQuoteButton = document.getElementById("favorite-quote-btn");
 
+const favoriteIconElement = favoriteQuoteButton
+  ? favoriteQuoteButton.querySelector("span")
+  : null;
+
 const viewFavoritesButton = document.getElementById("view-favorites-btn");
 const closeFavoritesButton = document.getElementById("close-favorites-btn");
 const favoritesSection = document.getElementById("favorites-section");
@@ -12,7 +16,6 @@ const favoritesListElement = document.getElementById("favorites-list");
 
 const apiUrl = "https://api.realinspire.live/v1/quotes/random";
 
-// Store the current quote and author globally or make them accessible
 let currentQuoteContent = "";
 let currentQuoteAuthor = "";
 let favorites = []; // Array to hold favorite quotes
@@ -47,20 +50,15 @@ function hideLoading() {
     copyQuoteButton.disabled = false;
     copyQuoteButton.style.opacity = "1";
   }
-  if (favoriteQuoteButton) {
-    favoriteQuoteButton.disabled = false;
-    favoriteQuoteButton.style.opacity = "1";
-  }
 }
 
 async function getQuote() {
   showLoading();
   // Disable copy button during loading
-  copyQuoteButton.disabled = true;
-  copyQuoteButton.style.opacity = "0.7";
-  favoriteQuoteButton.disabled = true;
-  favoriteQuoteButton.style.opacity = "0.7";
-
+  if (copyQuoteButton) {
+    copyQuoteButton.disabled = true; //
+    copyQuoteButton.style.opacity = "0.7"; //
+  }
   try {
     const response = await fetch(apiUrl);
     if (!response.ok) {
@@ -68,7 +66,6 @@ async function getQuote() {
     }
     const data = await response.json();
 
-    // The API returns an array of quotes. Let's pick a random one.
     if (data && data.length > 0) {
       const randomIndex = Math.floor(Math.random() * data.length);
       const randomQuote = data[randomIndex];
@@ -92,10 +89,11 @@ async function getQuote() {
     quoteAuthorElement.textContent = currentQuoteAuthor;
   } finally {
     hideLoading();
-    // Re-enable copy button after loading
-    copyQuoteButton.disabled = false;
-    copyQuoteButton.style.opacity = "1";
-
+    if (copyQuoteButton) {
+      //
+      copyQuoteButton.disabled = false; //
+      copyQuoteButton.style.opacity = "1"; //
+    }
     // Update favorite button based on the new quote
     updateFavoriteButtonStatus();
   }
@@ -118,7 +116,6 @@ async function copyQuote() {
     }, 1500); // Revert text after 1.5 seconds
   } catch (err) {
     console.error("Failed to copy quote: ", err);
-    // Optionally, inform the user that copying failed
   }
 }
 
@@ -137,30 +134,36 @@ function saveFavorites() {
 
 // Update the favorite button's appearance
 function updateFavoriteButtonStatus() {
+  if (!favoriteQuoteButton || !favoriteIconElement) return; // Safety check for elements
+
   if (!currentQuoteContent) {
-    favoriteQuoteButton.disabled = true;
     favoriteQuoteButton.style.opacity = "0.7";
+    favoriteQuoteButton.style.pointerEvents = "none";
+    favoriteIconElement.className = "fa fa-heart-o"; // Reset icon
+    favoriteQuoteButton.classList.remove("active", "active-2", "active-3"); // Reset animation classes
     return;
   }
-  favoriteQuoteButton.disabled = false;
   favoriteQuoteButton.style.opacity = "1";
+  favoriteQuoteButton.style.pointerEvents = "auto";
 
   const isFavorited = favorites.some(
     (fav) =>
       fav.content === currentQuoteContent && fav.author === currentQuoteAuthor
   );
+
   if (isFavorited) {
-    favoriteQuoteButton.textContent = "❤️ Unfavorite";
-    favoriteQuoteButton.classList.add("favorited");
+    favoriteIconElement.className = "fa fa-heart"; // Solid heart
+    favoriteQuoteButton.classList.add("active", "active-2"); // Show red heart state
   } else {
-    favoriteQuoteButton.textContent = "♡ Favorite";
-    favoriteQuoteButton.classList.remove("favorited");
+    favoriteIconElement.className = "fa fa-heart-o"; // Outline heart
+    favoriteQuoteButton.classList.remove("active", "active-2", "active-3"); // Clear all animation classes
   }
 }
 
 // Toggle favorite status
 function toggleFavorite() {
-  if (!currentQuoteContent) return;
+  if (!currentQuoteContent || !favoriteQuoteButton || !favoriteIconElement)
+    return;
 
   const quote = { content: currentQuoteContent, author: currentQuoteAuthor };
   const existingIndex = favorites.findIndex(
@@ -168,17 +171,39 @@ function toggleFavorite() {
   );
 
   if (existingIndex > -1) {
-    // Already a favorite, so remove it
+    // Is currently a favorite, about to unfavorite
     favorites.splice(existingIndex, 1);
+
+    favoriteQuoteButton.classList.remove("active");
+    setTimeout(function () {
+      favoriteQuoteButton.classList.remove("active-2");
+    }, 30);
+    favoriteQuoteButton.classList.remove("active-3");
+    setTimeout(function () {
+      if (favoriteIconElement) {
+        favoriteIconElement.classList.remove("fa-heart");
+        favoriteIconElement.classList.add("fa-heart-o");
+      }
+    }, 15);
   } else {
-    // Not a favorite, so add it
+    // Not a favorite, about to favorite
     favorites.push(quote);
+
+    favoriteQuoteButton.classList.add("active");
+    favoriteQuoteButton.classList.add("active-2");
+    setTimeout(function () {
+      if (favoriteIconElement) {
+        favoriteIconElement.classList.remove("fa-heart-o");
+        favoriteIconElement.classList.add("fa-heart");
+      }
+    }, 150);
+    setTimeout(function () {
+      favoriteQuoteButton.classList.add("active-3");
+    }, 150);
   }
   saveFavorites();
-  updateFavoriteButtonStatus();
-
   // If favorites section is visible, refresh it
-  if (!favoritesSection.classList.contains("hidden")) {
+  if (favoritesSection && !favoritesSection.classList.contains("hidden")) {
     displayFavoriteQuotes();
   }
 }
@@ -243,21 +268,19 @@ function toggleFavoritesSection() {
   }
 }
 
-// Event listener for the button
-newQuoteButton.addEventListener("click", getQuote);
-
-// Event listener for the copy button
-copyQuoteButton.addEventListener("click", copyQuote);
-
-// Event listener for the favorite button
-favoriteQuoteButton.addEventListener("click", toggleFavorite);
-
-// Event listeners for the View Favorite buttons
-viewFavoritesButton.addEventListener("click", toggleFavoritesSection);
-closeFavoritesButton.addEventListener("click", () => {
-  favoritesSection.classList.add("hidden");
-  viewFavoritesButton.textContent = "View Favorites";
-});
+// EVENT LISTENERS
+if (newQuoteButton) newQuoteButton.addEventListener("click", getQuote);
+if (copyQuoteButton) copyQuoteButton.addEventListener("click", copyQuote);
+if (favoriteQuoteButton)
+  favoriteQuoteButton.addEventListener("click", toggleFavorite);
+if (viewFavoritesButton)
+  viewFavoritesButton.addEventListener("click", toggleFavoritesSection);
+if (closeFavoritesButton) {
+  closeFavoritesButton.addEventListener("click", () => {
+    if (favoritesSection) favoritesSection.classList.add("hidden");
+    if (viewFavoritesButton) viewFavoritesButton.textContent = "View Favorites";
+  });
+}
 
 // Initial setup
 loadFavorites(); // Load favorites when the script starts
