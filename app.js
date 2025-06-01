@@ -33,8 +33,8 @@ function showLoading() {
     copyQuoteButton.style.opacity = "0.7";
   }
   if (favoriteQuoteButton) {
-    favoriteQuoteButton.disabled = true;
     favoriteQuoteButton.style.opacity = "0.7";
+    favoriteQuoteButton.style.pointerEvents = "none";
   }
 }
 
@@ -200,6 +200,13 @@ function toggleFavorite() {
     setTimeout(function () {
       favoriteQuoteButton.classList.add("active-3");
     }, 150);
+    const infoTextElement = favoriteQuoteButton.querySelector("p.info"); // Get the info element
+    if (infoTextElement) {
+      infoTextElement.classList.add("info-tog"); // Make it visible
+      setTimeout(function () {
+        infoTextElement.classList.remove("info-tog"); // Hide it after 1 second
+      }, 1000);
+    }
   }
   saveFavorites();
   // If favorites section is visible, refresh it

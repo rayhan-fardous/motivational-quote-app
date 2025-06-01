@@ -68,7 +68,8 @@ body {
 }
 
 .click span {
-  z-index: 999;
+  position: relative;
+  z-index: 1;
 }
 
 span:hover {
@@ -132,18 +133,20 @@ span:active {
   text-transform: uppercase;
   white-space: nowrap;
   color: grey;
-  position: relative;
-  top: 30px;
-  left: -46px;
+  position: absolute;
+  left: 50%; /* Center the start of the text */
+  transform: translateX(-50%); /* Fine-tune centering of the text block */
+  top: 45px; /* Position below the 38x38 button */
   opacity: 0;
-  transition: all 0.3s ease;
 }
 
 .info-tog {
   color: #f52755;
-  position: relative;
-  top: 45px;
   opacity: 1;
+}
+
+.info {
+    transition: opacity 0.3s ease;
 }
 
 * {
